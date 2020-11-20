@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
 
         //数据库字段长度
         Schema::defaultStringLength(191);
+        //JsonResource 去掉 data层， 直接返回结果
+        JsonResource::withoutWrapping();
     }
 }

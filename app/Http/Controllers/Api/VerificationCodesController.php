@@ -13,7 +13,7 @@ class VerificationCodesController extends Controller
     public function store(VerificationCodeRequest $request, EasySms $easySms)
     {
         $phone = $request->phone;
-//dd($request->all(), $phone);
+//dd($request->all(), $phone,app()->environment('production'));
         if (!app()->environment('production')) {
             $code = '1234';
         } else {
@@ -36,8 +36,8 @@ class VerificationCodesController extends Controller
         $key = 'verificationCode_'.Str::random(15);
         $expiredAt = now()->addMinutes(5);
         // 缓存验证码 5 分钟过期。
-        \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
-
+        $a = \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
+//dd($a);
         return response()->json([
             'key' => $key,
             'expired_at' => $expiredAt->toDateTimeString(),
