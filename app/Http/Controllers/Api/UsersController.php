@@ -6,6 +6,8 @@ use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+
 
 class UsersController extends Controller
 {
@@ -39,6 +41,23 @@ class UsersController extends Controller
         // 清除验证码缓存
         \Cache::forget($request->verification_key);
 
+//        return new UserResource($user);
+        return (new UserResource($user))->showSensitiveFields();
+    }
+
+
+    // 某个用户的详情
+    public function show(User $user, Request $request)
+    {
         return new UserResource($user);
+
+    }
+
+    // 当前登录用户信息
+    public function me(Request $request)
+    {
+//        dd(2);
+//        return new UserResource($request->user());
+        return (new UserResource($request->user()))->showSensitiveFields();
     }
 }
