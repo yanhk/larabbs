@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Models\User;
+use App\Http\Queries\TopicQuery;
 
 class TopicsController extends Controller
 {
@@ -40,7 +41,30 @@ class TopicsController extends Controller
         return response(null, 204);
     }
 
+
     // 话题列表
+    public function index(Request $request, TopicQuery $query)
+    {
+        $topics = $query->paginate();
+
+        return TopicResource::collection($topics);
+    }
+    // 某个用户发布的话题
+    public function userIndex(Request $request, User $user, TopicQuery $query)
+    {
+        $topics = $query->where('user_id', $user->id)->paginate();
+
+        return TopicResource::collection($topics);
+    }
+    // 单个话题详情
+    public function show($topicId, TopicQuery $query)
+    {
+        $topic = $query->findOrFail($topicId);
+        return new TopicResource($topic);
+    }
+
+    // 话题列表
+    /*
     public function index(Request $request, Topic $topic)
     {
 //        $query = $topic->query();
@@ -61,6 +85,7 @@ class TopicsController extends Controller
         return TopicResource::collection($topics);
     }
 
+
     // 某个用户发布的话题
     public function userIndex(Request $request, User $user)
     {
@@ -77,4 +102,15 @@ class TopicsController extends Controller
 
         return TopicResource::collection($topics);
     }
+
+    // 单个话题详情
+    public function show($topicId)
+    {
+        $topic = QueryBuilder::for(Topic::class)
+            ->allowedIncludes('user', 'category')
+            ->findOrFail($topicId);
+
+        return new TopicResource($topic);
+    }
+    */
 }
