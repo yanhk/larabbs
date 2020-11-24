@@ -7,7 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-
+use App\Models\Image;
 
 class UsersController extends Controller
 {
@@ -59,5 +59,24 @@ class UsersController extends Controller
 //        dd(2);
 //        return new UserResource($request->user());
         return (new UserResource($request->user()))->showSensitiveFields();
+    }
+
+    // 编辑个人信息
+    public function update(UserRequest $request)
+    {
+//        dd(1);
+        $user = $request->user();
+
+        $attributes = $request->only(['name', 'email', 'introduction']);
+
+        if ($request->avatar_image_id) {
+            $image = Image::find($request->avatar_image_id);
+
+            $attributes['avatar'] = $image->path;
+        }
+
+        $user->update($attributes);
+
+        return (new UserResource($user))->showSensitiveFields();
     }
 }
