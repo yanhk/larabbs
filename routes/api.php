@@ -49,7 +49,7 @@ Route::prefix('v1')->namespace('Api')->name('api.v1')
         Route::middleware('throttle:' . config('api.rate_limits.access'))
             ->group(function () {
 
-                // 游客可以访问的接口
+                /* 游客可以访问的接口*/
 
                 // 某个用户的详情
                 Route::get('users/{user}', 'UsersController@show')
@@ -64,9 +64,15 @@ Route::prefix('v1')->namespace('Api')->name('api.v1')
                 Route::resource('topics', 'TopicsController')->only([
                     'index', 'show'
                 ]);
+                // 话题回复列表
+                Route::get('topics/{topic}/replies', 'RepliesController@index')
+                    ->name('topics.replies.index');
+                // 某个用户的回复列表
+                Route::get('users/{user}/replies', 'RepliesController@userIndex')
+                    ->name('users.replies.index');
 
 
-                // 登录后可以访问的接口
+                /* 登录后可以访问的接口 */
                 Route::middleware('auth:api')->group(function() {
                     // 当前登录用户信息
                     Route::get('user', 'UsersController@me')
