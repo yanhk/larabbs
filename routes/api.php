@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::prefix('v1')->namespace('Api')->name('api.v1')
+Route::prefix('v1')->namespace('Api')
+    ->middleware('change-locale')
+    ->name('api.v1')
 //    ->middleware('throttle:1,1')
     ->group(function (){
         // 访问频率限制，
