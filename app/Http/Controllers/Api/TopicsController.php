@@ -45,8 +45,13 @@ class TopicsController extends Controller
     // 话题列表
     public function index(Request $request, TopicQuery $query)
     {
-        $topics = $query->paginate();
 
+        $topics = $query->paginate();
+//dd($topics);
+foreach ($topics as $k=>$v){
+    dd($v->user());
+    dd($v->user()->avatar);
+}
         return TopicResource::collection($topics);
     }
     // 某个用户发布的话题
